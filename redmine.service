@@ -1,0 +1,8 @@
+[Unit]
+Description=Foo
+
+[Service]
+ExecStart=/home/rakibul/Workstation/redmine/vN
+
+[Install]
+WantedBy=multi-user.target
