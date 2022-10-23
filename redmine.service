@@ -2,7 +2,9 @@
 Description=Foo
 
 [Service]
+WorkingDirectory=/home/rakibul/Workstation/redmine
 ExecStart=/home/rakibul/Workstation/redmine/vN
+Type=simple
 
 [Install]
 WantedBy=multi-user.target
