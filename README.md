@@ -1,4 +1,4 @@
-# Get it work
+# Get it working
 
 ## Modify redmine.service
 ```bash
@@ -23,3 +23,4 @@ journalctl --user -u redmine.service
 - <s> store constants in .env </s>
 - <s> add crontab </s>
 - implement dunst
+- make linkable
