@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gen2brain/beeep"
+	"github.com/joho/godotenv"
 )
 
 type CustomField struct {
@@ -51,6 +53,13 @@ type Payload struct {
 
 var NotifiedIssues = make(map[int]bool)
 
+func init() {
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
 func main() {
 	http.HandleFunc("/track", func(w http.ResponseWriter, r *http.Request) {
 		var issues Payload = fetch()
@@ -62,7 +71,7 @@ func main() {
 			if !NotifiedIssues[issues.Issues[i].Id] {
 				NotifiedIssues[issues.Issues[i].Id] = true
 
-				err := beeep.Notify(issues.Issues[i].Subject, issues.Issues[i].Description, issues.Issues[i].Author.Name)
+				err := beeep.Notify(issues.Issues[i].Subject, issues.Issues[i].Author.Name, "")
 				if err != nil {
 					panic(err)
 				}
@@ -74,10 +83,11 @@ func main() {
 }
 
 func fetch() Payload {
-	url := "http://13.213.42.8/redmine/issues.json?assigned_to_id=22"
+	IP := os.Getenv("IP")
+	url := fmt.Sprintf("http://%v/redmine/issues.json?assigned_to_id=22", IP)
 	method := "GET"
 
-	payload := strings.NewReader(`http://13.213.42.8/redmine/projects/admin-panel/issues?c%5B%5D=cf_1&c%5B%5D=cf_5&c%5B%5D=tracker&c%5B%5D=status&c%5B%5D=done_ratio&c%5B%5D=priority&c%5B%5D=subject&c%5B%5D=cf_3&c%5B%5D=assigned_to&c%5B%5D=author&c%5B%5D=updated_on&c%5B%5D=project&c%5B%5D=created_on&c%5B%5D=last_updated_by&c%5B%5D=attachments&f%5B%5D=status_id&f%5B%5D=assigned_to_id&f%5B%5D=&group_by=&op%5Bassigned_to_id%5D=%3D&op%5Bstatus_id%5D=o&set_filter=1&sort=status%2Cid%3Adesc&t%5B%5D=&utf8=%E2%9C%93&v%5Bassigned_to_id%5D%5B%5D=me`)
+	payload := strings.NewReader(fmt.Sprint(`http://%v/redmine/projects/admin-panel/issues?c%5B%5D=cf_1&c%5B%5D=cf_5&c%5B%5D=tracker&c%5B%5D=status&c%5B%5D=done_ratio&c%5B%5D=priority&c%5B%5D=subject&c%5B%5D=cf_3&c%5B%5D=assigned_to&c%5B%5D=author&c%5B%5D=updated_on&c%5B%5D=project&c%5B%5D=created_on&c%5B%5D=last_updated_by&c%5B%5D=attachments&f%5B%5D=status_id&f%5B%5D=assigned_to_id&f%5B%5D=&group_by=&op%5Bassigned_to_id%5D=%3D&op%5Bstatus_id%5D=o&set_filter=1&sort=status%2Cid%3Adesc&t%5B%5D=&utf8=%E2%9C%93&v%5Bassigned_to_id%5D%5B%5D=me`, IP))
 
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, payload)
