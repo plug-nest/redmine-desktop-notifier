@@ -9,3 +9,4 @@ journalctl --user -u redmine.service
 
 - store data in sqlite3/postgresql
 - <s> store constants in .env </s>
+- <s> add crontab </s>
