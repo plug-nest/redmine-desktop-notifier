@@ -8,4 +8,4 @@ journalctl --user -u redmine.service
 # TODO
 
 - store data in sqlite3/postgresql
-- <u> store constants in .env </u>
+- <s> store constants in .env </s>
